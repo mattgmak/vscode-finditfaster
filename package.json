@@ -1,10 +1,10 @@
 {
   "name": "find-it-faster",
   "displayName": "FindItFaster",
-  "publisher": "TomRijndorp",
+  "publisher": "mattgmak",
   "icon": "media/icon.png",
   "repository": {
-    "url": "https://github.com/tomrijndorp/vscode-finditfaster"
+    "url": "https://github.com/mattgmak/vscode-finditfaster"
   },
   "description": "Find it, but faster! Leveraging fzf and rg.",
   "keywords": [
@@ -56,6 +56,10 @@
       {
         "command": "find-it-faster.findWithinFilesWithType",
         "title": "Find It Faster: search within files (with type filter)"
+      },
+      {
+        "command": "find-it-faster.findInActiveFile",
+        "title": "Find It Faster: search in active file"
       },
       {
         "command": "find-it-faster.listSearchLocations",
@@ -206,6 +210,21 @@
           "type": "boolean",
           "default": false
         },
+        "find-it-faster.findInActiveFile.showPreview": {
+          "markdownDescription": "Show a preview window when searching in the active file",
+          "type": "boolean",
+          "default": true
+        },
+        "find-it-faster.findInActiveFile.previewCommand": {
+          "markdownDescription": "When populated: Used by `fzf` to produce the preview when searching in active file. Use `{1}` for the line number. The filename is automatically provided. Example using custom bat options: `bat --color=always --highlight-line {1} {filename}`.",
+          "type": "string",
+          "default": ""
+        },
+        "find-it-faster.findInActiveFile.previewWindowConfig": {
+          "markdownDescription": "When populated: Used by `fzf` to determine position and look of the preview window. See the `fzf` documentation. Example: `right:border-left:50%:+{1}+3/3:~3`.",
+          "type": "string",
+          "default": ""
+        },
         "find-it-faster.advanced.disableStartupChecks": {
           "markdownDescription": "By default, we check that you have `fzf`, `rg`, and `bat` on your path. If you'd like to disable these checks because you're getting creative (e.g. use `cat` instead of `bat`), check this box. Obviously you may see errors on your terminal if we do call one of these programs when they are not present!",
           "type": "boolean",
@@ -232,9 +251,12 @@
           "default": ""
         },
         "find-it-faster.general.shellArgsForTerminal": {
-          "markdownDescription": "Set the args for the shell (terminal type) to be used.",
-          "type": "array | undefined",
-          "default": "undefined"
+          "markdownDescription": "Set the args for the shell (terminal type) to be used. Leave empty to use default shell arguments.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
         }
       }
     }

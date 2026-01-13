@@ -42,13 +42,13 @@ This extension exposes four commands:
 If your active text editor has a selection, it will be used as the initial query (you can disable
 this setting).
 
-⬇️ &nbsp;**Find files**  
+⬇️ &nbsp;**Find files**
 ![Find Files](media/find_files.gif)
 
-⬇️ &nbsp;**Find text within files**  
+⬇️ &nbsp;**Find text within files**
 ![Find Within Files](media/find_within_files.gif)
 
-⬇️ &nbsp;**Find text within files, with file type filter**  
+⬇️ &nbsp;**Find text within files, with file type filter**
 ![Find Within Files](media/find_within_files_with_filter.gif)
 
 This extension has also been tested on remote workspaces (e.g. SSH sessions).
@@ -78,7 +78,7 @@ into a VS Code context.
 
 ## Extension Settings
 
-See the settings for this extension in the GUI.  
+See the settings for this extension in the GUI.
 You might want to play with `fzf`, `rg` and `bat` on the command line and read their manuals in
 order to get a better understanding of some of the settings in this extension. It will be worth
 your time.
@@ -109,8 +109,8 @@ detected. That said, if you don't touch the FindItFaster terminal, things should
 
 ### **NixOS**:
 
-The bash scripts use a shebang that conflicts with NixOs: `#!/bin/bash` , as bash isn't 
-available in `/bin`, a work around is to this to follow the instructions in [Issue #44](https://github.com/tomrijndorp/vscode-finditfaster/issues/44) 
+The bash scripts use a shebang that conflicts with NixOs: `#! /usr/bin/env bash` , as bash isn't
+available in `/bin`, a work around is to this to follow the instructions in [Issue #44](https://github.com/tomrijndorp/vscode-finditfaster/issues/44)
 and change the shebangs manually, after this, the extention should work normally.
 
 <hr />
@@ -139,14 +139,14 @@ more about using `fzf`.
 
 ### 🧘 _Can you give focus back to my editor / my problems panel / other?_
 ➥ I don't the VS Code API enables me to do this. Shoot me a message if you think I'm mistaken and
-  I'll try to make this better.  
+  I'll try to make this better.
   2023 Update: Added a setting `find-it-faster.general.killTerminalAfterUse`. When true, it will kill
-  the extension's terminal which may result in VS Code focusing the previous one. It may help you.  
+  the extension's terminal which may result in VS Code focusing the previous one. It may help you.
   2024 Update: I recommend using `find-it-faster.general.useTerminalInEditor`. This way, the
   extension window won't interfere with your other terminals, and you get more real estate for
   previewing files.
 
-### 🐞 _I found a bug!_  
+### 🐞 _I found a bug!_
 ➥ Yeah, that's not unlikely. There are a lot of edge cases with this sort of tooling. Three options:
   1. Shrug :)
   2. File a Github issue. Please give detailed information as the devil is in the details. Please
@@ -159,7 +159,7 @@ more about using `fzf`.
        settings?
   3. For the most up to date information on contributing fixes and features, see `CONTRIBUTING.md`.
 
-### 💩 _I don't like `fzf` / `rg` / `bat`. Can I just use `find`, `grep`, and `cat` or something else?_  
+### 💩 _I don't like `fzf` / `rg` / `bat`. Can I just use `find`, `grep`, and `cat` or something else?_
 ➥ You can actually already use other preview tools than `bat`, e.g. `cat`. I've left some hints in
   the settings. Outside of what's available, substituting other tools is not supported.
 
@@ -177,7 +177,7 @@ fi
 ### 🤑 _Do you take donations?_
 ➥ Thanks for asking, but no. The amount of work that went into this extension is tiny compared to
   the countless hours that have gone into the command line tools that are leveraged in this
-  extension. Please support those tools instead.  
+  extension. Please support those tools instead.
   What I do appreciate is if you'd help others find this extension by spreading the word and/or
   leaving a rating!
 
@@ -286,8 +286,8 @@ fi
 - New screen captures in README
 
 ### 0.0.12
-- Option to "find within files", but pre-filter by file type.  
-  Exposes a new keyboard shortcut (default: `cmd+shift+ctrl+u` / `ctrl+shift+alt+u`).  
+- Option to "find within files", but pre-filter by file type.
+  Exposes a new keyboard shortcut (default: `cmd+shift+ctrl+u` / `ctrl+shift+alt+u`).
   The selection is stateful; it will be kept across searches such that you can easily re-run a
   search with the same file types. Should add new screen captures, but will do that in 0.0.13.
 

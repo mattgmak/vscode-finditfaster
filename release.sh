@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 set -euxo pipefail
 
 echo "Checking out release..."
@@ -10,4 +10,3 @@ git push
 echo "Done. Switching back to main..."
 git checkout main
 echo "done"
-

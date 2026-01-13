@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 set -euxo pipefail
 
 BAT_VER=v0.18.1

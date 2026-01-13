@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 set -uo pipefail  # No -e to support write to canary file after cancel
 
 . "$EXTENSION_PATH/shared.sh"
