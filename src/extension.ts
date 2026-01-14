@@ -957,6 +957,7 @@ async function executeTerminalCommand(cmd: CommandKey) {
       commands[CFG.lastCommand].preRunCallback;
     commands["resumeSearch"].postRunCallback =
       commands[CFG.lastCommand].postRunCallback;
+    commands["resumeSearch"].key = commands[CFG.lastCommand].key;
   } else if (cmd.startsWith("find")) {
     // Keep track of last-run cmd, but we don't want to resume `listSearchLocations` etc
     CFG.lastCommand = cmd;
