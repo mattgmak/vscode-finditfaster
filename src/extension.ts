@@ -789,7 +789,7 @@ function handleTerminalFocusRestore(commandWasSuccess: boolean) {
 
 function createTerminal() {
   const terminalOptions: vscode.TerminalOptions = {
-    name: "F️indItFaster",
+    name: "FindItFaster",
     location: CFG.useTerminalInEditor
       ? vscode.TerminalLocation.Editor
       : vscode.TerminalLocation.Panel,
@@ -898,7 +898,6 @@ function getCommandString(cmd: Command) {
     return null;
   }
   ret += ` ${paths}`;
-  console.log(`getCommandString: "${ret}"`);
   return ret;
 }
 

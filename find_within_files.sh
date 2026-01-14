@@ -16,7 +16,7 @@ fi
 # 2. Interactively restart Ripgrep with reload action
 # 3. Open the file
 # shellcheck disable=SC2207
-RG_PREFIX=(rg 
+RG_PREFIX=(rg
     --column
     --hidden
     $(array_join ${USE_GITIGNORE_OPT+"${USE_GITIGNORE_OPT[@]}"})
@@ -36,7 +36,7 @@ fi
 RG_PREFIX+=(" 2> /dev/null")
 
 PREVIEW_ENABLED=${FIND_WITHIN_FILES_PREVIEW_ENABLED:-1}
-PREVIEW_COMMAND=${FIND_WITHIN_FILES_PREVIEW_COMMAND:-'bat --decorations=always --color=always {1} --highlight-line {2} --style=header,grid'}
+PREVIEW_COMMAND=${FIND_WITHIN_FILES_PREVIEW_COMMAND:-'line={2} && begin=$( if [[ $line -lt 7 ]]; then echo $((line-1)); else echo 6; fi ) && bat --style=header --highlight-line={2} --color=always --line-range $((line-begin)):$((line+50)) {1}'}
 PREVIEW_WINDOW=${FIND_WITHIN_FILES_PREVIEW_WINDOW_CONFIG:-'right:border-left:50%:+{2}+3/3:~3'}
 HAS_SELECTION=${HAS_SELECTION:-}
 RESUME_SEARCH=${RESUME_SEARCH:-}
@@ -65,7 +65,7 @@ fi
 # Some backwards compatibility stuff
 if [[ $FZF_VER_PT1 == "0.2" && $FZF_VER_PT2 -lt 7 ]]; then
     if [[ "$PREVIEW_COMMAND" != "$FIND_WITHIN_FILES_PREVIEW_COMMAND" ]]; then
-        PREVIEW_COMMAND='bat {1} --color=always --highlight-line {2} --line-range {2}:'
+        PREVIEW_COMMAND='line={2} && begin=$( if [[ $line -lt 7 ]]; then echo $((line-1)); else echo 6; fi ) && bat --highlight-line={2} --color=always --line-range $((line-begin)):$((line+50)) {1}'
     fi
     if [[ "$PREVIEW_WINDOW" != "$FIND_WITHIN_FILES_PREVIEW_WINDOW_CONFIG" ]]; then
         PREVIEW_WINDOW='right:50%'

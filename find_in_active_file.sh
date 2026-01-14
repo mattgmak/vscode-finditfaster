@@ -21,10 +21,12 @@ RG_PREFIX=(rg
     $(array_join ${USE_GITIGNORE_OPT+"${USE_GITIGNORE_OPT[@]}"})
     --line-number
     --no-heading
-    --no-filename
+    --with-filename
     --color=always
     --smart-case
     --colors 'match:fg:green'
+    --colors 'path:fg:white'
+    --colors 'path:style:nobold'
     $(array_join "${GLOBS[@]+"${GLOBS[@]}"}")
 )
 if [[ ${#TYPE_FILTER_ARR[@]} -gt 0 ]]; then
@@ -36,7 +38,8 @@ PREVIEW_ENABLED=${FIND_IN_ACTIVE_FILE_PREVIEW_ENABLED:-1}
 # For single file search, we use the basename since we've cd'd into the directory
 # {1} is the line number (since we use --no-filename, there's no filename field)
 # Need to escape the filename properly for fzf preview execution
-PREVIEW_COMMAND=${FIND_IN_ACTIVE_FILE_PREVIEW_COMMAND:-"bat --decorations=always --color=always $(printf %q "$FILENAME") --highlight-line {1} --style=header,grid"}
+# make command use filename:linenum:char again
+PREVIEW_COMMAND=${FIND_IN_ACTIVE_FILE_PREVIEW_COMMAND:-'line={2} && begin=$( if [[ $line -lt 7 ]]; then echo $((line-1)); else echo 6; fi ) && bat --style=plain --highlight-line={2} --color=always --line-range $((line-begin)):$((line+50)) {1}'}
 PREVIEW_WINDOW=${FIND_IN_ACTIVE_FILE_PREVIEW_WINDOW_CONFIG:-'right:border-left:50%:+{1}+3/3:~3'}
 HAS_SELECTION=${HAS_SELECTION:-}
 RESUME_SEARCH=${RESUME_SEARCH:-}
@@ -65,7 +68,7 @@ fi
 # Some backwards compatibility stuff
 if [[ $FZF_VER_PT1 == "0.2" && $FZF_VER_PT2 -lt 7 ]]; then
     if [[ "$PREVIEW_COMMAND" != "$FIND_IN_ACTIVE_FILE_PREVIEW_COMMAND" ]]; then
-        PREVIEW_COMMAND="bat $(printf %q "$FILENAME") --color=always --highlight-line {1} --line-range {1}:"
+        PREVIEW_COMMAND='line={2} && begin=$( if [[ $line -lt 7 ]]; then echo $((line-1)); else echo 6; fi ) && bat --highlight-line={2} --color=always --line-range $((line-begin)):$((line+50)) {1}'
     fi
     if [[ "$PREVIEW_WINDOW" != "$FIND_IN_ACTIVE_FILE_PREVIEW_WINDOW_CONFIG" ]]; then
         PREVIEW_WINDOW='right:50%'
@@ -115,14 +118,17 @@ IFS=: read -ra VAL < <(
       --phony --query "$INITIAL_QUERY" \
       ${PREVIEW_STR[@]+"${PREVIEW_STR[@]}"} \
 )
-# Output is line number, column number, contents (no filename with --no-filename)
+# Output is filename, line number, character, contents
 
 if [[ ${#VAL[@]} -eq 0 ]]; then
     echo canceled
     echo "1" > "$CANARY_FILE"
     exit 1
 else
-    # VAL contains: line number, column number (no filename due to --no-filename)
-    # Reconstruct full path: directory + basename + line + column
-    echo "$FILE_PATH:${VAL[0]}:${VAL[1]}" > "$CANARY_FILE"
+    FILENAME=${VAL[0]}:${VAL[1]}:${VAL[2]}
+    if [[ -n "$SINGLE_DIR_ROOT" ]]; then
+        echo "$SINGLE_DIR_ROOT/$FILENAME" > "$CANARY_FILE"
+    else
+        echo "$FILENAME" > "$CANARY_FILE"
+    fi
 fi
