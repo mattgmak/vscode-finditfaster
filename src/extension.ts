@@ -245,6 +245,7 @@ interface Config {
   openFileInPreviewEditor: boolean;
   killTerminalAfterUse: boolean;
   fuzzRipgrepQuery: boolean;
+  fuzzRipgrepQueryInActiveFile: boolean;
   restoreFocusTerminal: boolean;
   useTerminalInEditor: boolean;
   shellPathForTerminal: string;
@@ -292,6 +293,7 @@ const CFG: Config = {
   openFileInPreviewEditor: false,
   killTerminalAfterUse: false,
   fuzzRipgrepQuery: false,
+  fuzzRipgrepQueryInActiveFile: false,
   restoreFocusTerminal: false,
   useTerminalInEditor: false,
   shellPathForTerminal: "",
@@ -411,6 +413,9 @@ function updateConfigWithUserSettings() {
     "findInActiveFile.previewWindowConfig"
   );
   CFG.fuzzRipgrepQuery = getCFG("findWithinFiles.fuzzRipgrepQuery");
+  CFG.fuzzRipgrepQueryInActiveFile = getCFG(
+    "findInActiveFile.fuzzRipgrepQuery"
+  );
   CFG.restoreFocusTerminal = getCFG("general.restoreFocusTerminal");
   CFG.useTerminalInEditor = getCFG("general.useTerminalInEditor");
   CFG.shellPathForTerminal = getCFG("general.shellPathForTerminal");
@@ -824,6 +829,9 @@ function createTerminal() {
       EXPLAIN_FILE: path.join(CFG.tempDir, "paths_explain"),
       BAT_THEME: CFG.batTheme,
       FUZZ_RG_QUERY: CFG.fuzzRipgrepQuery ? "1" : "0",
+      FUZZ_RG_QUERY_IN_ACTIVE_FILE: CFG.fuzzRipgrepQueryInActiveFile
+        ? "1"
+        : "0",
       /* eslint-enable @typescript-eslint/naming-convention */
     },
   };

@@ -210,6 +210,11 @@
           "type": "boolean",
           "default": false
         },
+        "find-it-faster.findInActiveFile.fuzzRipgrepQuery": {
+          "markdownDescription": "By default, matching in \"Find In Active File\" is exact. Enabling this option relaxes the matching by slightly fuzzing the query that is sent to `rg`: it treats whitespaces as wildcards (`.*`). For example, when enabled, the query `function bar` will match `function foobar`. Otherwise, it won't. This setting does not work on Windows at the moment.",
+          "type": "boolean",
+          "default": false
+        },
         "find-it-faster.findInActiveFile.showPreview": {
           "markdownDescription": "Show a preview window when searching in the active file",
           "type": "boolean",

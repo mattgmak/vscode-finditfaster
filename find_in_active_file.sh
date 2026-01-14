@@ -39,11 +39,11 @@ PREVIEW_ENABLED=${FIND_IN_ACTIVE_FILE_PREVIEW_ENABLED:-1}
 # {1} is the line number (since we use --no-filename, there's no filename field)
 # Need to escape the filename properly for fzf preview execution
 # make command use filename:linenum:char again
-PREVIEW_COMMAND=${FIND_IN_ACTIVE_FILE_PREVIEW_COMMAND:-'line={2} && begin=$( if [[ $line -lt 7 ]]; then echo $((line-1)); else echo 6; fi ) && bat --style=plain --highlight-line={2} --color=always --line-range $((line-begin)):$((line+50)) {1}'}
-PREVIEW_WINDOW=${FIND_IN_ACTIVE_FILE_PREVIEW_WINDOW_CONFIG:-'right:border-left:50%:+{1}+3/3:~3'}
+PREVIEW_COMMAND=${FIND_IN_ACTIVE_FILE_PREVIEW_COMMAND:-'bat --style=numbers --highlight-line={2} --color=always {1}'}
+PREVIEW_WINDOW=${FIND_IN_ACTIVE_FILE_PREVIEW_WINDOW_CONFIG:-'right:border-left:50%:+{2}+3/3:~3'}
 HAS_SELECTION=${HAS_SELECTION:-}
 RESUME_SEARCH=${RESUME_SEARCH:-}
-FUZZ_RG_QUERY=${FUZZ_RG_QUERY:-}
+FUZZ_RG_QUERY_IN_ACTIVE_FILE=${FUZZ_RG_QUERY_IN_ACTIVE_FILE:-}
 # We match against the beginning of the line so everything matches but nothing gets highlighted...
 QUERY='^'
 INITIAL_QUERY=''  # Don't show initial "^" regex in fzf
@@ -68,7 +68,7 @@ fi
 # Some backwards compatibility stuff
 if [[ $FZF_VER_PT1 == "0.2" && $FZF_VER_PT2 -lt 7 ]]; then
     if [[ "$PREVIEW_COMMAND" != "$FIND_IN_ACTIVE_FILE_PREVIEW_COMMAND" ]]; then
-        PREVIEW_COMMAND='line={2} && begin=$( if [[ $line -lt 7 ]]; then echo $((line-1)); else echo 6; fi ) && bat --highlight-line={2} --color=always --line-range $((line-begin)):$((line+50)) {1}'
+        PREVIEW_COMMAND='bat --highlight-line={2} --color=always {1}'
     fi
     if [[ "$PREVIEW_WINDOW" != "$FIND_IN_ACTIVE_FILE_PREVIEW_WINDOW_CONFIG" ]]; then
         PREVIEW_WINDOW='right:50%'
@@ -89,7 +89,7 @@ if [[ "$(printf '%s\n' "$FZF_VER_NUM" "0.36" | sort -V | head -n 1)" == "0.36" ]
 fi
 
 RG_QUERY_PARSING="{q}"
-if [[ "$FUZZ_RG_QUERY" -eq 1 ]]; then
+if [[ "$FUZZ_RG_QUERY_IN_ACTIVE_FILE" -eq 1 ]]; then
     RG_QUERY_PARSING="\$(echo {q} | sed 's/ /.*/g')"
     QUERY="$(echo $QUERY | sed 's/ /.*/g')"
 fi
@@ -112,6 +112,7 @@ IFS=: read -ra VAL < <(
       --cycle \
       --bind "change:reload:sleep 0.1; $RG_PREFIX_STR $RG_QUERY_PARSING '$FILENAME' || true" \
       --delimiter : \
+      --with-nth '2..' \
       --history $LAST_QUERY_FILE \
       --bind "enter:execute(echo {n} > $LAST_POS_FILE)+accept" \
       --bind "$RESUME_POS_BINDING" \
