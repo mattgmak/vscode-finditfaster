@@ -204,6 +204,11 @@ fi
 
 ## Release Notes
 
+### 0.0.41
+
+- Improved temp file cleanup
+- `find-it-faster.findInActiveFile` now searches through the current document content (i.e. unsaved file content/buffer) of the active file.
+
 ### 0.0.40 (fork)
 
 - Add new command: `find-it-faster.findInActiveFile` to search lines in the active file.

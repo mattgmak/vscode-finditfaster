@@ -359,14 +359,7 @@ export function activate(context: vscode.ExtensionContext) {
 /* Called when extension is deactivated by VS Code */
 export function deactivate() {
   term?.dispose();
-  fs.rmSync(CFG.canaryFile, { force: true });
-  fs.rmSync(CFG.selectionFile, { force: true });
-  if (fs.existsSync(CFG.lastQueryFile)) {
-    fs.rmSync(CFG.lastQueryFile, { force: true });
-  }
-  if (fs.existsSync(CFG.lastPosFile)) {
-    fs.rmSync(CFG.lastPosFile, { force: true });
-  }
+  fs.rmSync(CFG.tempDir, { recursive: true, force: true });
 }
 
 /** Map settings from the user-configurable settings to our internal data structure */
@@ -853,11 +846,21 @@ function getWorkspaceFoldersAsString() {
   return CFG.searchPaths.reduce((x, y) => x + ` '${y}'`, "");
 }
 
-function getActiveFilePathsAsString() {
+function getFindInActiveFileArgs() {
   const editor = vscode.window.activeTextEditor;
-  const filePath = editor?.document.uri.fsPath;
-  // Wrap in quotes for bash invocation to handle spaces and special characters
-  return filePath ? `'${filePath}'` : undefined;
+  if (!editor) {
+    return undefined;
+  }
+  const fileContent = editor.document.getText();
+  const fileName = editor.document.uri.path.split("/").pop();
+  if (!fileName) {
+    return undefined;
+  }
+  // Write buffer content to temp file to pass as CLI arg
+  const tempBufferFile = path.join(CFG.tempDir, fileName);
+  fs.writeFileSync(tempBufferFile, fileContent, { mode: 0o600 });
+  const filePath = editor.document.uri.fsPath;
+  return `'${filePath}' '${tempBufferFile}'`;
 }
 
 function getCommandString(cmd: Command) {
@@ -898,14 +901,14 @@ function getCommandString(cmd: Command) {
     ret += envVarToString("RESUME_SEARCH", "1");
   }
   ret += cmdPath;
-  const paths =
+  const scriptArgs =
     cmd.key !== "findInActiveFile"
       ? getWorkspaceFoldersAsString()
-      : getActiveFilePathsAsString();
-  if (!paths) {
+      : getFindInActiveFileArgs();
+  if (!scriptArgs) {
     return null;
   }
-  ret += ` ${paths}`;
+  ret += ` ${scriptArgs}`;
   return ret;
 }
 

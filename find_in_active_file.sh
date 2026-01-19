@@ -5,6 +5,10 @@ set -uo pipefail  # No -e to support write to canary file after cancel
 
 # Get the file path passed as argument (always expects exactly one file)
 FILE_PATH="$1"
+# Get the buffer file path passed as second argument
+BUFFER_FILE="$2"
+# Clean up the buffer file on exit
+trap "rm -f '$BUFFER_FILE'" EXIT
 # Get the directory containing the file
 SINGLE_DIR_ROOT=$(dirname "$FILE_PATH")
 # Get just the filename (basename) for ripgrep and bat
@@ -96,7 +100,7 @@ fi
 
 RG_PREFIX_STR=$(array_join "${RG_PREFIX+"${RG_PREFIX[@]}"}")
 RG_PREFIX_STR="${RG_PREFIX+"${RG_PREFIX[@]}"}"
-FZF_CMD="${RG_PREFIX+"${RG_PREFIX[@]}"} '$QUERY' '$FILENAME'"
+FZF_CMD="${RG_PREFIX+"${RG_PREFIX[@]}"} '$QUERY' '$BUFFER_FILE'"
 
 # echo $FZF_CMD
 echo "$RG_PREFIX_STR"
@@ -110,7 +114,7 @@ IFS=: read -ra VAL < <(
   FZF_DEFAULT_COMMAND="$FZF_CMD" \
   fzf --ansi \
       --cycle \
-      --bind "change:reload:sleep 0.1; $RG_PREFIX_STR $RG_QUERY_PARSING '$FILENAME' || true" \
+      --bind "change:reload:sleep 0.1; $RG_PREFIX_STR $RG_QUERY_PARSING '$BUFFER_FILE' || true" \
       --delimiter : \
       --with-nth '2..' \
       --history $LAST_QUERY_FILE \
@@ -119,17 +123,15 @@ IFS=: read -ra VAL < <(
       --phony --query "$INITIAL_QUERY" \
       ${PREVIEW_STR[@]+"${PREVIEW_STR[@]}"} \
 )
-# Output is filename, line number, character, contents
+# Output is buffer_file_path, line number, character, contents
+# We need to replace the buffer file path with the actual file path
 
 if [[ ${#VAL[@]} -eq 0 ]]; then
     echo canceled
     echo "1" > "$CANARY_FILE"
     exit 1
 else
-    FILENAME=${VAL[0]}:${VAL[1]}:${VAL[2]}
-    if [[ -n "$SINGLE_DIR_ROOT" ]]; then
-        echo "$SINGLE_DIR_ROOT/$FILENAME" > "$CANARY_FILE"
-    else
-        echo "$FILENAME" > "$CANARY_FILE"
-    fi
+    # VAL[0] is the buffer file path (temp file), VAL[1] is line, VAL[2] is column
+    # Replace with the actual file path
+    echo "$FILE_PATH:${VAL[1]}:${VAL[2]}" > "$CANARY_FILE"
 fi
