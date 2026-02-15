@@ -133,6 +133,54 @@
           "store_path": "/nix/store/9z1v3wyrxp6fpyzw21lcakd5w7aknzyc-nodejs-24.12.0"
         }
       }
+    },
+    "vsce@latest": {
+      "last_modified": "2026-01-23T17:20:52Z",
+      "resolved": "github:NixOS/nixpkgs/a1bab9e494f5f4939442a57a58d0449a109593fe#vsce",
+      "source": "devbox-search",
+      "version": "3.7.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/08gjhj5df69s6284vf0mxyzcgjcq4l6r-vsce-3.7.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/08gjhj5df69s6284vf0mxyzcgjcq4l6r-vsce-3.7.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ifg511naj3bc6n6h1k2fds0xvzc5hnzc-vsce-3.7.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ifg511naj3bc6n6h1k2fds0xvzc5hnzc-vsce-3.7.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/yckix6diqcqybjyyhkixbyzxc5119sir-vsce-3.7.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/yckix6diqcqybjyyhkixbyzxc5119sir-vsce-3.7.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/gdl1sqhxlh9mjpzy9lvwqh62cmnd2b4y-vsce-3.7.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/gdl1sqhxlh9mjpzy9lvwqh62cmnd2b4y-vsce-3.7.1"
+        }
+      }
     }
   }
 }
