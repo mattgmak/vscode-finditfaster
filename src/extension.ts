@@ -123,7 +123,7 @@ function getTypeOptions() {
       return new FileTypeOption(
         typeStr,
         typeInfo,
-        CFG.findWithinFilesFilter.has(typeStr)
+        CFG.findWithinFilesFilter.has(typeStr),
       );
     })
     .filter((x) => x.label.trim().length !== 0);
@@ -158,11 +158,11 @@ async function selectTypeFilter() {
     // https://github.com/microsoft/vscode/issues/103084
     // https://github.com/microsoft/vscode/issues/119834
     qp.selectedItems = qp.items.filter((x) =>
-      CFG.findWithinFilesFilter.has(x.label)
+      CFG.findWithinFilesFilter.has(x.label),
     );
     qp.value = [...CFG.findWithinFilesFilter.keys()].reduce(
       (x, y) => x + " " + y,
-      ""
+      "",
     );
     qp.matchOnDescription = true;
     qp.show();
@@ -315,17 +315,17 @@ function setupConfig(context: vscode.ExtensionContext) {
   const localScript = (x: string) =>
     vscode.Uri.file(
       path.join(context.extensionPath, x) +
-        (os.platform() === "win32" ? ".ps1" : ".sh")
+        (os.platform() === "win32" ? ".ps1" : ".sh"),
     );
   commands.findFiles.uri = localScript(commands.findFiles.script);
   commands.findFilesWithType.uri = localScript(commands.findFiles.script);
   commands.findWithinFiles.uri = localScript(commands.findWithinFiles.script);
   commands.findWithinFilesWithType.uri = localScript(
-    commands.findWithinFiles.script
+    commands.findWithinFiles.script,
   );
   commands.findInActiveFile.uri = localScript(commands.findInActiveFile.script);
   commands.listSearchLocations.uri = localScript(
-    commands.listSearchLocations.script
+    commands.listSearchLocations.script,
   );
   commands.flightCheck.uri = localScript(commands.flightCheck.script);
 }
@@ -377,10 +377,10 @@ function updateConfigWithUserSettings() {
   CFG.useGitIgnoreExcludes = getCFG("general.useGitIgnoreExcludes");
   CFG.additionalSearchLocations = getCFG("general.additionalSearchLocations");
   CFG.additionalSearchLocationsWhen = getCFG(
-    "general.additionalSearchLocationsWhen"
+    "general.additionalSearchLocationsWhen",
   );
   CFG.searchCurrentWorkingDirectory = getCFG(
-    "general.searchCurrentWorkingDirectory"
+    "general.searchCurrentWorkingDirectory",
   );
   CFG.searchWorkspaceFolders = getCFG("general.searchWorkspaceFolders");
   CFG.hideTerminalAfterSuccess = getCFG("general.hideTerminalAfterSuccess");
@@ -389,25 +389,25 @@ function updateConfigWithUserSettings() {
   CFG.killTerminalAfterUse = getCFG("general.killTerminalAfterUse");
   CFG.showMaximizedTerminal = getCFG("general.showMaximizedTerminal");
   CFG.batTheme = getCFG("general.batTheme");
-  (CFG.openFileInPreviewEditor = getCFG("general.openFileInPreviewEditor")),
-    (CFG.findFilesPreviewEnabled = getCFG("findFiles.showPreview"));
+  ((CFG.openFileInPreviewEditor = getCFG("general.openFileInPreviewEditor")),
+    (CFG.findFilesPreviewEnabled = getCFG("findFiles.showPreview")));
   CFG.findFilesPreviewCommand = getCFG("findFiles.previewCommand");
   CFG.findFilesPreviewWindowConfig = getCFG("findFiles.previewWindowConfig");
   CFG.findWithinFilesPreviewEnabled = getCFG("findWithinFiles.showPreview");
   CFG.findWithinFilesPreviewCommand = getCFG("findWithinFiles.previewCommand");
   CFG.findWithinFilesPreviewWindowConfig = getCFG(
-    "findWithinFiles.previewWindowConfig"
+    "findWithinFiles.previewWindowConfig",
   );
   CFG.findInActiveFilePreviewEnabled = getCFG("findInActiveFile.showPreview");
   CFG.findInActiveFilePreviewCommand = getCFG(
-    "findInActiveFile.previewCommand"
+    "findInActiveFile.previewCommand",
   );
   CFG.findInActiveFilePreviewWindowConfig = getCFG(
-    "findInActiveFile.previewWindowConfig"
+    "findInActiveFile.previewWindowConfig",
   );
   CFG.fuzzRipgrepQuery = getCFG("findWithinFiles.fuzzRipgrepQuery");
   CFG.fuzzRipgrepQueryInActiveFile = getCFG(
-    "findInActiveFile.fuzzRipgrepQuery"
+    "findInActiveFile.fuzzRipgrepQuery",
   );
   CFG.restoreFocusTerminal = getCFG("general.restoreFocusTerminal");
   CFG.useTerminalInEditor = getCFG("general.useTerminalInEditor");
@@ -451,7 +451,7 @@ function collectSearchLocations() {
   const addSearchLocationsFromSettings = () => {
     locations.push(...CFG.additionalSearchLocations);
     CFG.additionalSearchLocations.forEach((x) =>
-      setOrUpdateOrigin(x, PathOrigin.settings)
+      setOrUpdateOrigin(x, PathOrigin.settings),
     );
   };
   switch (CFG.additionalSearchLocationsWhen) {
@@ -484,7 +484,7 @@ function collectSearchLocations() {
         }
       } else {
         vscode.window.showErrorMessage(
-          "Non-file:// uri's not currently supported..."
+          "Non-file:// uri's not currently supported...",
         );
         return "";
       }
@@ -521,7 +521,7 @@ function explainSearchLocations(useColor = false) {
   ret += maybeBlue("Paths added because they're defined in the workspace:\n");
   ret += listDirs(PathOrigin.workspace);
   ret += maybeBlue(
-    "Paths added because they're the specified in the settings:\n"
+    "Paths added because they're the specified in the settings:\n",
   );
   ret += listDirs(PathOrigin.settings);
 
@@ -531,7 +531,7 @@ function explainSearchLocations(useColor = false) {
 function writePathOriginsFile() {
   fs.writeFileSync(
     path.join(CFG.tempDir, "paths_explain"),
-    explainSearchLocations(os.platform() !== "win32")
+    explainSearchLocations(os.platform() !== "win32"),
   );
   return true;
 }
@@ -567,7 +567,7 @@ function doFlightCheck(): boolean {
 
   if (!commands.flightCheck || !commands.flightCheck.uri) {
     vscode.window.showErrorMessage(
-      "Failed to find flight check script. This is a bug. Please report it."
+      "Failed to find flight check script. This is a bug. Please report it.",
     );
     return false;
   }
@@ -586,7 +586,7 @@ function doFlightCheck(): boolean {
             "-File",
             `"${commands.flightCheck.uri.fsPath}"`,
           ],
-          { shell: true }
+          { shell: true },
         )
         .toString("utf-8");
     } else {
@@ -617,14 +617,14 @@ function doFlightCheck(): boolean {
     }
     if (errStr !== "") {
       vscode.window.showErrorMessage(
-        `Failed to activate plugin! Make sure you have the required command line tools installed as outlined in the README. ${errStr}`
+        `Failed to activate plugin! Make sure you have the required command line tools installed as outlined in the README. ${errStr}`,
       );
     }
 
     return errStr === "";
   } catch (error) {
     vscode.window.showErrorMessage(
-      `Failed to run checks before starting extension. Maybe this is helpful: ${error}`
+      `Failed to run checks before starting extension. Maybe this is helpful: ${error}`,
     );
     return false;
   }
@@ -662,7 +662,7 @@ function reinitialize() {
       handleCanaryFileChange();
     } else if (eventType === "rename") {
       vscode.window.showErrorMessage(
-        `Issue detected with extension ${CFG.extensionName}. You may have to reload it.`
+        `Issue detected with extension ${CFG.extensionName}. You may have to reload it.`,
       );
     }
   });
@@ -688,7 +688,9 @@ function openFiles(data: string) {
         //vscode.window.showWarningMessage('File: ' + file + "\nlineTmp: " + lineTmp + "\ncharTmp: " + charTmp);
       } else {
         vscode.window.showWarningMessage(
-          "Did not match anything in filename: [" + p + "] could not open file!"
+          "Did not match anything in filename: [" +
+            p +
+            "] could not open file!",
         );
       }
     }
@@ -706,7 +708,16 @@ function openFiles(data: string) {
       assert(char >= 0);
       selection = new vscode.Range(line, char, line, char);
     }
-    vscode.window.showTextDocument(vscode.Uri.file(file), {
+
+    const vscodeFile =
+      file === "@"
+        ? vscode.window.activeTextEditor?.document.uri
+        : vscode.Uri.file(file);
+    if (!vscodeFile) {
+      vscode.window.showWarningMessage("No active file found");
+      return;
+    }
+    vscode.window.showTextDocument(vscodeFile, {
       preview: CFG.openFileInPreviewEditor,
       selection: selection,
     });
@@ -734,7 +745,7 @@ function handleCanaryFileChange() {
     if (err) {
       // We shouldn't really end up here. Maybe leave the terminal around in this case...
       vscode.window.showWarningMessage(
-        "Something went wrong but we don't know what... Did you clean out your /tmp folder?"
+        "Something went wrong but we don't know what... Did you clean out your /tmp folder?",
       );
     } else {
       const commandWasSuccess = data.length > 0 && data[0] !== "1";
@@ -777,7 +788,7 @@ function handleTerminalFocusRestore(commandWasSuccess: boolean) {
           isExtensionChangedTerminal = false;
           disposable.dispose();
         }
-      }
+      },
     );
   }
 
@@ -894,7 +905,7 @@ function getCommandString(cmd: Command) {
   if (CFG.useTypeFilter && CFG.findWithinFilesFilter.size > 0) {
     ret += envVarToString(
       "TYPE_FILTER",
-      "'" + [...CFG.findWithinFilesFilter].reduce((x, y) => x + ":" + y) + "'"
+      "'" + [...CFG.findWithinFilesFilter].reduce((x, y) => x + ":" + y) + "'",
     );
   }
   if (cmd.script === "resume_search") {
@@ -945,13 +956,13 @@ async function executeTerminalCommand(cmd: CommandKey) {
     // Run the last-run command again
     if (os.platform() === "win32") {
       vscode.window.showErrorMessage(
-        "Resume search is not implemented on Windows. Sorry! PRs welcome."
+        "Resume search is not implemented on Windows. Sorry! PRs welcome.",
       );
       return;
     }
     if (CFG.lastCommand === null) {
       vscode.window.showErrorMessage(
-        "Cannot resume the last search because no search was run yet."
+        "Cannot resume the last search because no search was run yet.",
       );
       return;
     }
@@ -971,7 +982,7 @@ async function executeTerminalCommand(cmd: CommandKey) {
     if (os.platform() !== "win32") {
       term.sendText("bash");
       term.sendText(
-        'export PS1="::: Terminal allocated for FindItFaster. Do not use. ::: "; clear'
+        'export PS1="::: Terminal allocated for FindItFaster. Do not use. ::: "; clear',
       );
     }
   }
@@ -986,7 +997,7 @@ async function executeTerminalCommand(cmd: CommandKey) {
     const commandString = getCommandString(commands[cmd]);
     if (!commandString) {
       vscode.window.showErrorMessage(
-        `Error invoking command ${cmd}: no paths to search`
+        `Error invoking command ${cmd}: no paths to search`,
       );
       return;
     }

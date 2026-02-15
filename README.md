@@ -204,6 +204,10 @@ fi
 
 ## Release Notes
 
+### 0.0.42
+
+- `find-it-faster.findInActiveFile` now works with any active editor, even untitled editors.
+
 ### 0.0.41
 
 - Improved temp file cleanup

@@ -1,14 +1,7 @@
 {
   "folders": [
     {
-      "path": "."
-    }
+      "path": ".",
+    },
   ],
-  "settings": {
-    "terminal.integrated.automationProfile.linux": {
-      "path": "bash",
-      "icon": "terminal-bash",
-      "args": ["-l"]
-    }
-  }
 }

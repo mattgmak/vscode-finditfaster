@@ -133,5 +133,5 @@ if [[ ${#VAL[@]} -eq 0 ]]; then
 else
     # VAL[0] is the buffer file path (temp file), VAL[1] is line, VAL[2] is column
     # Replace with the actual file path
-    echo "$FILE_PATH:${VAL[1]}:${VAL[2]}" > "$CANARY_FILE"
+    echo "@:${VAL[1]}:${VAL[2]}" > "$CANARY_FILE"
 fi
