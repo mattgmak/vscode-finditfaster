@@ -1,3 +1,4 @@
+.devbox/**
 .vscode/**
 .vscode-test/**
 out/test/**
