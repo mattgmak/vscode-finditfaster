@@ -669,6 +669,21 @@ function reinitialize() {
   return true;
 }
 
+/**
+ * Fallback for "Files above 50MB cannot be synchronized" error; opening via `vscode.open` uses another path and
+ * usually works. If the document is already open, `showTextDocument` succeeds.
+ */
+async function showTextDocumentWithOpenFallback(
+  uri: vscode.Uri,
+  options: vscode.TextDocumentShowOptions,
+): Promise<void> {
+  try {
+    await vscode.window.showTextDocument(uri, options);
+  } catch {
+    await vscode.commands.executeCommand("vscode.open", uri, options);
+  }
+}
+
 /** Interpreting the terminal output and turning them into a vscode command */
 function openFiles(data: string) {
   const filePaths = data.split("\n").filter((s) => s !== "");
@@ -717,10 +732,17 @@ function openFiles(data: string) {
       vscode.window.showWarningMessage("No active file found");
       return;
     }
-    vscode.window.showTextDocument(vscodeFile, {
+    const showOptions: vscode.TextDocumentShowOptions = {
       preview: CFG.openFileInPreviewEditor,
       selection: selection,
-    });
+    };
+    void showTextDocumentWithOpenFallback(vscodeFile, showOptions).catch(
+      (err) => {
+        vscode.window.showWarningMessage(
+          `Could not open file ${vscodeFile.fsPath}: ${String(err)}`,
+        );
+      },
+    );
   });
 }
 

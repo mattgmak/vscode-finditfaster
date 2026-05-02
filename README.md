@@ -204,6 +204,10 @@ fi
 
 ## Release Notes
 
+### 0.0.43
+
+- Added a fallback for the "Files above 50MB cannot be synchronized" error.
+
 ### 0.0.42
 
 - `find-it-faster.findInActiveFile` now works with any active editor, even untitled editors.
